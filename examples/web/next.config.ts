@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
+import TailwindExtractorWebpackPlugin from "./tailwind-extractor-webpack-plugin";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.optimization = { ...config.optimization, minimize: false };
+      config.plugins.push(
+        new TailwindExtractorWebpackPlugin({
+          output: "extracted-tailwind.css",
+        })
+      );
+    }
+    return config;
+  },
 };
-
 export default nextConfig;
